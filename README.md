@@ -1,4 +1,4 @@
-# runner [![Build Status](https://travis-ci.org/feifan00x/runner.svg?branch=master)](https://travis-ci.org/feifan00x/runner)
+# Runner [![Build Status](https://travis-ci.org/feifan00x/runner.svg?branch=master)](https://travis-ci.org/feifan00x/runner)
 shell factory
 
 ```
