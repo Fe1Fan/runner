@@ -98,6 +98,16 @@ func loadConf() {
 	}
 	var configs RunConfigs
 	err = json.Unmarshal(fileReader, &configs)
+	for index, v := range configs.Configs {
+		if v.Pid != "" && v.Pid != " " {
+			if utils.CheckPid(v.Pid) {
+				v.Status = "running"
+			} else {
+				v.Status = "stop"
+			}
+			configs.Configs[index] = v
+		}
+	}
 	runtimeRunConfigs = &configs
 }
 

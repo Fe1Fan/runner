@@ -6,6 +6,14 @@ import (
 	"os/exec"
 )
 
+func CheckPid(pid string) bool {
+	command := ExecShell(fmt.Sprint("ps -p ", pid, "|awk 'NR==2 {print $1}'"))
+	if command == "" || command == " " {
+		return false
+	}
+	return true
+}
+
 func ExecShell(command string) string {
 	cmd := exec.Command("/bin/bash", "-c", command)
 
@@ -20,8 +28,7 @@ func ExecShell(command string) string {
 	_ = stdout.Close()
 
 	if string(outBytes) == "" {
-		fmt.Println("return null")
-		return "return null"
+		return ""
 	}
 
 	if err := cmd.Wait(); err != nil {
