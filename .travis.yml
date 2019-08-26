@@ -1,2 +1,6 @@
-language: golang
-script: main.go
+language: go
+go:
+  - 1.9
+sudo: required
+script:
+  - go build main.go
