@@ -86,15 +86,12 @@ func commandExecIndexShell(index int) {
 	conf := configs.Configs[index-1]
 	if conf.Cmd != "" && conf.Cmd != " " {
 		result := utils.ExecShell(fmt.Sprint(conf.Cmd, "&& echo $$"))
+		// fuck \n
 		resultAndPid := strings.Split(result, `
 `)
-		fmt.Println(len(resultAndPid))
-		fmt.Println(resultAndPid)
-		conf.Result = strings.Split(result, `
-`)[0]
+		conf.Result = resultAndPid[0]
 		conf.LRT = time.Now().Format("2006-01-02 15:04:05")
-		conf.Pid = strings.Split(result, `
-`)[1]
+		conf.Pid = resultAndPid[1]
 	}
 	updateRuntimeConfigs(conf, index-1)
 	commandReload(Runner)
