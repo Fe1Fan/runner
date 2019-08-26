@@ -16,6 +16,7 @@ type RunConfigs struct {
 
 type RunConf struct {
 	Name   string `json:"name"`
+	Remark string `json:"remark"`
 	Ver    string `json:"ver"`
 	Cmd    string `json:"cmd"`
 	Incl   string `json:"incl"`
@@ -105,7 +106,7 @@ func printTable() {
 	table.SetHeader([]string{"Index", "Name", "Remark", "Version", "Status", "PID"})
 	table.SetAlignment(tablewriter.ALIGN_CENTER)
 	for k, v := range configs.Configs {
-		table.Append([]string{strconv.Itoa(k + 1), v.Name, v.Ver, v.Cmd, v.Status, v.Pid})
+		table.Append([]string{strconv.Itoa(k + 1), v.Name, v.Remark, v.Ver, v.Status, v.Pid})
 	}
 	table.Render()
 }
