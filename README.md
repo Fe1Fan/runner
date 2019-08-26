@@ -12,11 +12,11 @@ __________
         \/           \/     \/     \/ v 1.0.0
 path check: true
 file check: true
-+-------+------+-------------+---------+--------+-----+
-| INDEX | NAME |   REMARK    | VERSION | STATUS | PID |
-+-------+------+-------------+---------+--------+-----+
-|   1   | test | test remark |  1.0.0  |  stop  | nil |
-+-------+------+-------------+---------+--------+-----+
++-------+------+-------------+---------+----------------------+-------------+--------+-----+
+| INDEX | NAME |   REMARK    | VERSION |          LRT         |    RESULT   | STATUS | PID |
++-------+------+-------------+---------+----------------------+-------------+--------+-----+
+|   1   | test | test remark |  1.0.0  |  2019-08-26 13:00:01 | helloworld  |  stop  | nil |
++-------+------+-------------+---------+----------------------+-------------+--------+-----+
 input s scan config or index number exec.
 ```
 ### conf
@@ -29,8 +29,10 @@ input s scan config or index number exec.
 			"ver": "1.0.0",
 			"cmd": "echo helloworld",
 			"incl": "",
-			"status":"stop",
-			"pid":"nil"
+			"status":"",
+			"pid":"",
+			"lrt":"",
+			"result":""
 		}
 	]
 }
