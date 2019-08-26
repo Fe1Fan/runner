@@ -2,67 +2,57 @@ package core
 
 import (
 	"fmt"
-	"github.com/feifan00x/runner/config"
-	"github.com/feifan00x/runner/plugins"
-	"io/ioutil"
-	"os/exec"
+	"github.com/feifan00x/runner/info"
+	"github.com/feifan00x/runner/utils"
+	"regexp"
 	"strconv"
 )
 
-func Runner(command string, resultFunc func()) {
-	defer resultFunc()
-	defer clean()
-	var pluginsInfo = *config.PluginsAddress
-	if command == "S" || command == "s" {
-		config.ErrorMessage = ""
-		config.InfoMessage = "scanner local plugins success"
-		plugins.ScannerPlugins()
-	} else {
-		index, err := strconv.Atoi(command)
+const pattern string = `\d+`
+
+var command string
+
+func Runner() {
+	fmt.Print(info.Banner)
+	utils.PrintlnColor(utils.DefaultColor, info.Version)
+	initFile(checkFile())
+	loadConf()
+	printTable()
+	msg := runtimeMessage
+	if msg.Show {
+		utils.PrintlnColorMsg(msg)
+	}
+	fmt.Println("input s scan config or index number exec.")
+	for {
+		_, _ = fmt.Scanln(&command)
+		if command == "s" || command == "S" {
+			reload(Runner)
+			return
+		}
+		rex, err := regexp.MatchString(pattern, command)
 		if err != nil {
-			config.InfoMessage = ""
-			config.ErrorMessage = "place input number or 's' "
+			runtimeMessage = utils.GenerateMessage(utils.DefaultErrColor, fmt.Sprint("regexp error", err.Error()))
+			reload(Runner)
 			return
 		}
-		if index > len(pluginsInfo.Plugin)-1 {
-			config.InfoMessage = ""
-			config.ErrorMessage = fmt.Sprint("not found ", index)
+		if !rex {
+			runtimeMessage = utils.GenerateMessage(utils.DefaultErrColor, "command error")
+			reload(Runner)
 			return
 		}
-		plugin := pluginsInfo.Plugin[index]
-		fmt.Println(plugin)
-		config.ErrorMessage = ""
-		config.InfoMessage = execShell(plugin.Uri)
-		plugins.UpdatePluginsState(index, "start", config.InfoMessage)
+		index, _ := strconv.Atoi(command)
+		var configs = *runtimeRunConfigs
+		if index > len(configs.Configs)-1 {
+			runtimeMessage = utils.GenerateMessage(utils.DefaultErrColor, fmt.Sprint("not fund index: ", index, " err"))
+			reload(Runner)
+			return
+		}
+		var runConf = configs.Configs[index]
+		fmt.Println(runConf)
 	}
 }
 
-func clean() {
-	fmt.Println("\033[H\033[2J")
-}
-
-func execShell(command string) string {
-	cmd := exec.Command("/bin/bash", "-c", command)
-
-	stdout, _ := cmd.StdoutPipe()
-
-	if err := cmd.Start(); err != nil {
-		fmt.Println("Execute failed when Start:" + err.Error())
-		return err.Error()
-	}
-
-	outBytes, _ := ioutil.ReadAll(stdout)
-	_ = stdout.Close()
-
-	if string(outBytes) == "" {
-		fmt.Println("return null")
-		return "return null"
-	}
-
-	if err := cmd.Wait(); err != nil {
-		fmt.Println("Execute failed when Wait:" + err.Error())
-		return err.Error()
-	}
-	fmt.Println(string(outBytes))
-	return string(outBytes)
+func reload(reload func()) {
+	utils.ExecShell("clear")
+	defer reload()
 }

@@ -1,18 +1,10 @@
-package main
+package info
 
-import (
-	"github.com/feifan00x/runner/core"
-)
+const Version string = "v 1.0.0"
 
-const version string = "v 1.0.0"
-
-const banner string = `__________                                  
+const Banner string = `__________                                  
 \______   \__ __  ____   ____   ___________ 
  |       _/  |  \/    \ /    \_/ __ \_  __ \
  |    |   \  |  /   |  \   |  \  ___/|  | \/
  |____|_  /____/|___|  /___|  /\___  >__|   
         \/           \/     \/     \/ `
-
-func main() {
-	core.Runner()
-}
