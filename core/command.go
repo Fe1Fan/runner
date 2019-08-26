@@ -12,6 +12,7 @@ import (
 
 type command struct {
 	name         string
+	pattern      string
 	remark       string
 	execNil      func()
 	execInt      func(code int)
@@ -26,14 +27,15 @@ var commands []command
 
 func execCommand(name string) {
 	commands = []command{
-		{name: "q", remark: "exit", execInt: commandExit, execIntCode: 0},
-		{name: "s", remark: "scan", execFunc: commandReload, execFuncName: Runner},
-		{name: `\d+`, remark: "run index", execInt: commandExecIndexShell},
-		{name: `h`, remark: "help", execNil: commandHelp, execFunc: commandReload, execFuncName: Runner},
+		{name: "q", pattern: "^q$", remark: "exit", execInt: commandExit, execIntCode: 0},
+		{name: "s", pattern: "^s$", remark: "scan", execFunc: commandReload, execFuncName: Runner},
+		{name: "h", pattern: "h", remark: "help", execNil: commandHelp, execFunc: commandReload, execFuncName: Runner},
+		{name: "run", pattern: "^run (\\d+|\\S+)", remark: "run index or name", execStr: commandRun},
+		{name: "stop", pattern: "^stop (\\d+|\\S+)", remark: "run index or name", execStr: commandStop},
 	}
 	for _, obj := range commands {
-		b, _ := regexp.MatchString(obj.name, name)
-		if obj.name == name || b {
+		b, _ := regexp.MatchString(obj.pattern, name)
+		if b {
 			if obj.execNil != nil {
 				obj.execNil()
 			}
@@ -44,6 +46,9 @@ func execCommand(name string) {
 				obj.execInt(obj.execIntCode)
 			}
 			if obj.execStr != nil {
+				if obj.execStrVal == "" || obj.execStrVal == " " {
+					obj.execStrVal = name
+				}
 				obj.execStr(obj.execStrVal)
 			}
 			if obj.execFunc != nil {
@@ -78,12 +83,38 @@ func commandExit(code int) {
 }
 
 //exec shell
-func commandExecIndexShell(index int) {
-	var configs = *runtimeRunConfigs
-	if index > len(configs.Configs) {
-		utils.PrintlnColor(utils.DefaultErrColor, "index not fund")
+func commandRun(val string) {
+	var vals = strings.Fields(val)
+	if len(vals) > 1 {
+		val = vals[1]
 	}
-	conf := configs.Configs[index-1]
+	var configs = *runtimeRunConfigs
+	var conf RunConf
+	index, err := strconv.Atoi(val)
+	if err != nil {
+		//find by name
+		fmt.Println(fmt.Sprint("find by name", val))
+		for i, obj := range configs.Configs {
+			if obj.Name == val {
+				conf = configs.Configs[i]
+				index = i + 1
+			}
+		}
+	} else {
+		//find by index
+		fmt.Println(fmt.Sprint("find by index", index))
+		if index > len(configs.Configs) {
+			utils.PrintlnColor(utils.DefaultErrColor, "index not fund")
+		}
+		conf = configs.Configs[index-1]
+	}
+
+	if conf == (RunConf{}) {
+		runtimeMessage = utils.GenerateMessage(utils.DefaultErrColor, fmt.Sprint("Not fund ", val))
+		commandReload(Runner)
+		return
+	}
+
 	if conf.Cmd != "" && conf.Cmd != " " {
 		result := utils.ExecShell(fmt.Sprint(conf.Cmd, "&& echo $$"))
 		// fuck \n
@@ -95,4 +126,8 @@ func commandExecIndexShell(index int) {
 	}
 	updateRuntimeConfigs(conf, index-1)
 	commandReload(Runner)
+}
+
+func commandStop(val string) {
+
 }
