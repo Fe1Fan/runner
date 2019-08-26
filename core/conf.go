@@ -112,3 +112,14 @@ func printTable() {
 	}
 	table.Render()
 }
+
+// save
+func saveConfToFile() {
+	var configs = *runtimeRunConfigs
+	data, err := json.MarshalIndent(configs, "", "  ")
+	if err != nil {
+		utils.GenerateMessage(utils.DefaultErrColor, fmt.Sprint("JSON转换失败: ", err.Error()))
+		return
+	}
+	_ = ioutil.WriteFile(RunConfPath+RunConfFile, data, 0)
+}

@@ -6,6 +6,8 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
+	"time"
 )
 
 type command struct {
@@ -76,7 +78,24 @@ func commandExit(code int) {
 }
 
 //exec shell
-func commandExecIndexShell(code int) {
-	fmt.Print("input")
-	fmt.Println(code)
+func commandExecIndexShell(index int) {
+	var configs = *runtimeRunConfigs
+	if index > len(configs.Configs) {
+		utils.PrintlnColor(utils.DefaultErrColor, "index not fund")
+	}
+	conf := configs.Configs[index-1]
+	if conf.Cmd != "" && conf.Cmd != " " {
+		result := utils.ExecShell(fmt.Sprint(conf.Cmd, "&& echo $$"))
+		resultAndPid := strings.Split(result, `
+`)
+		fmt.Println(len(resultAndPid))
+		fmt.Println(resultAndPid)
+		conf.Result = strings.Split(result, `
+`)[0]
+		conf.LRT = time.Now().Format("2006-01-02 15:04:05")
+		conf.Pid = strings.Split(result, `
+`)[1]
+	}
+	updateRuntimeConfigs(conf, index-1)
+	commandReload(Runner)
 }
