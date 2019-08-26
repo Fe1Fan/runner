@@ -1,6 +1,7 @@
 # Runner [![Build Status](https://travis-ci.org/feifan00x/runner.svg?branch=master)](https://travis-ci.org/feifan00x/runner)
-shell factory
+Shell Factory
 
+### run:
 ```
 ❯ runner
 __________                                  
@@ -17,4 +18,20 @@ file check: true
 |   1   | test | test remark |  1.0.0  |  stop  | nil |
 +-------+------+-------------+---------+--------+-----+
 input s scan config or index number exec.
+```
+### conf
+```json
+{
+	"configs":[
+		{
+			"name": "test",
+			"remark": "test remark",
+			"ver": "1.0.0",
+			"cmd": "echo helloworld",
+			"incl": "",
+			"status":"stop",
+			"pid":"nil"
+		}
+	]
+}
 ```
