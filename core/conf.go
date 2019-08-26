@@ -11,7 +11,7 @@ import (
 )
 
 type RunConfigs struct {
-	Configs []RunConf
+	Configs []RunConf `json:"configs"`
 }
 
 type RunConf struct {

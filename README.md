@@ -22,18 +22,18 @@ input s scan config or index number exec.
 ### conf
 ```json
 {
-	"configs":[
-		{
-			"name": "test",
-			"remark": "test remark",
-			"ver": "1.0.0",
-			"cmd": "echo helloworld",
-			"incl": "",
-			"status":"",
-			"pid":"",
-			"lrt":"",
-			"result":""
-		}
-	]
+  "configs": [
+    {
+      "name": "test",
+      "remark": "test remark",
+      "ver": "1.0.0",
+      "cmd": "echo helloworld",
+      "incl": "",
+      "status": "stop",
+      "pid": "45619",
+      "result": "helloworld",
+      "lrt": "2019-08-26 19:34:21"
+    }
+  ]
 }
 ```
