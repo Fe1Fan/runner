@@ -105,7 +105,7 @@ func printTable() {
 	table.SetHeader([]string{"Index", "Name", "Remark", "Version", "Status", "PID"})
 	table.SetAlignment(tablewriter.ALIGN_CENTER)
 	for k, v := range configs.Configs {
-		table.Append([]string{strconv.Itoa(k), v.Name, v.Ver, v.Cmd, v.Status, v.Pid})
+		table.Append([]string{strconv.Itoa(k + 1), v.Name, v.Ver, v.Cmd, v.Status, v.Pid})
 	}
 	table.Render()
 }
