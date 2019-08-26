@@ -22,6 +22,8 @@ type RunConf struct {
 	Incl   string `json:"incl"`
 	Status string `json:"status"`
 	Pid    string `json:"pid"`
+	Result string `json:"result"`
+	LRT    string `json:"lrt"`
 }
 
 const RunConfPath string = "/usr/local/etc/runner/conf/"
@@ -103,10 +105,10 @@ func loadConf() {
 func printTable() {
 	var configs = *runtimeRunConfigs
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Index", "Name", "Remark", "Version", "Status", "PID"})
+	table.SetHeader([]string{"Index", "Name", "Remark", "Version", "LRT", "Result", "Status", "PID"})
 	table.SetAlignment(tablewriter.ALIGN_CENTER)
 	for k, v := range configs.Configs {
-		table.Append([]string{strconv.Itoa(k + 1), v.Name, v.Remark, v.Ver, v.Status, v.Pid})
+		table.Append([]string{strconv.Itoa(k + 1), v.Name, v.Remark, v.Ver, v.LRT, v.Result, v.Status, v.Pid})
 	}
 	table.Render()
 }
