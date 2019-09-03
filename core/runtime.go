@@ -10,3 +10,11 @@ func updateRuntimeConfigs(config RunConf, index int) {
 	runtimeRunConfigs.Configs[index] = config
 	saveConfToFile()
 }
+
+func UpdateRuntimeMessage(message utils.Message) {
+	runtimeMessage = message
+}
+
+func GetRuntimeMessage() utils.Message {
+	return runtimeMessage
+}

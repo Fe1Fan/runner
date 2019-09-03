@@ -8,24 +8,26 @@ import (
 	"os"
 )
 
-var commandStr string
+func init() {
+	initFile(checkFile())
+	loadConf()
+}
 
 func Runner() {
 	fmt.Print(info.Banner)
 	utils.PrintlnColor(utils.DefaultColor, info.Version)
-	initFile(checkFile())
-	loadConf()
 	printTable()
-	msg := runtimeMessage
+	msg := GetRuntimeMessage()
 	if msg.Show {
 		utils.PrintlnColorMsg(msg)
-		runtimeMessage.Show = false
+		msg.Show = false
+		UpdateRuntimeMessage(msg)
 	}
 	fmt.Println("input s scan config or index number exec.")
 	for {
 		reader := bufio.NewReader(os.Stdin)
 
 		commandStr, _, _ := reader.ReadLine()
-		execCommand(string(commandStr))
+		ExecCommand(string(commandStr), Runner)
 	}
 }

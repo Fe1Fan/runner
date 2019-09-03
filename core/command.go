@@ -25,13 +25,15 @@ type command struct {
 
 var commands []command
 
-func execCommand(name string) {
+func ExecCommand(name string, resultFunc func()) {
+	defer resultFunc()
 	commands = []command{
 		{name: "q", pattern: "^q$", remark: "exit", execInt: commandExit, execIntCode: 0},
 		{name: "s", pattern: "^s$", remark: "scan", execFunc: commandReload, execFuncName: Runner},
-		{name: "h", pattern: "h", remark: "help", execNil: commandHelp, execFunc: commandReload, execFuncName: Runner},
+		{name: "h", pattern: "^h$", remark: "help", execNil: commandHelp, execFunc: commandReload, execFuncName: Runner},
 		{name: "run", pattern: "^run (\\d+|\\S+)", remark: "run index or name", execStr: commandRun},
 		{name: "stop", pattern: "^stop (\\d+|\\S+)", remark: "run index or name", execStr: commandStop},
+		{name: "update", pattern: "^update (\\d+|\\S+)", remark: "run index or name", execStr: commandStop},
 	}
 	for _, obj := range commands {
 		b, _ := regexp.MatchString(obj.pattern, name)
@@ -57,8 +59,7 @@ func execCommand(name string) {
 			return
 		}
 	}
-	runtimeMessage = utils.GenerateMessage(utils.DefaultErrColor, "command error")
-	commandReload(Runner)
+	UpdateRuntimeMessage(utils.GenerateMessage(utils.DefaultErrColor, "command error"))
 }
 
 //help
@@ -67,7 +68,7 @@ func commandHelp() {
 	for index, obj := range commands {
 		commandHelp = fmt.Sprint(commandHelp, index, ",", obj.name, ",", obj.remark, "\n")
 	}
-	runtimeMessage = utils.GenerateMessage(utils.DefaultColor, commandHelp)
+	UpdateRuntimeMessage(utils.GenerateMessage(utils.DefaultColor, commandHelp))
 	utils.ExecShell("clear")
 }
 
@@ -110,14 +111,13 @@ func commandRun(val string) {
 	}
 
 	if conf == (RunConf{}) {
-		runtimeMessage = utils.GenerateMessage(utils.DefaultErrColor, fmt.Sprint("Not fund ", val))
-		commandReload(Runner)
+		UpdateRuntimeMessage(utils.GenerateMessage(utils.DefaultErrColor, fmt.Sprint("Not fund ", val)))
 		return
 	}
 
 	if conf.Cmd != "" && conf.Cmd != " " {
 		result := utils.ExecShell(fmt.Sprint(conf.Cmd, "&& echo $$"))
-		// fuck \n
+		// TODO fuck \n
 		resultAndPid := strings.Split(result, `
 `)
 		conf.Result = resultAndPid[0]
@@ -125,7 +125,6 @@ func commandRun(val string) {
 		conf.Pid = resultAndPid[1]
 	}
 	updateRuntimeConfigs(conf, index-1)
-	commandReload(Runner)
 }
 
 func commandStop(val string) {

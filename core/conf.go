@@ -45,16 +45,16 @@ func checkFile() (bool, bool) {
 	} else {
 		defer file.Close()
 	}
-	if pathResult {
-		utils.PrintlnColor(utils.DefaultSucColor, fmt.Sprint("path check: ", pathResult))
-	} else {
-		utils.PrintlnColor(utils.DefaultErrColor, fmt.Sprint("path check: ", pathResult))
-	}
-	if fileResult {
-		utils.PrintlnColor(utils.DefaultSucColor, fmt.Sprint("file check: ", fileResult))
-	} else {
-		utils.PrintlnColor(utils.DefaultErrColor, fmt.Sprint("file check: ", fileResult))
-	}
+	//if pathResult {
+	//	utils.PrintlnColor(utils.DefaultSucColor, fmt.Sprint("path check: ", pathResult))
+	//} else {
+	//	utils.PrintlnColor(utils.DefaultErrColor, fmt.Sprint("path check: ", pathResult))
+	//}
+	//if fileResult {
+	//	utils.PrintlnColor(utils.DefaultSucColor, fmt.Sprint("file check: ", fileResult))
+	//} else {
+	//	utils.PrintlnColor(utils.DefaultErrColor, fmt.Sprint("file check: ", fileResult))
+	//}
 	return pathResult, fileResult
 }
 
