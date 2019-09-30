@@ -27,9 +27,9 @@ input s scan config or index number exec.
       "name": "test",
       "remark": "test remark",
       "ver": "1.0.0",
-      "cmd": "echo helloworld",
+      "shell": "echo helloworld",
       "incl": "",
-      "status": "stop",
+      "stat": "stop",
       "pid": "45619",
       "rult": "helloworld",
       "lrt": "2019-08-26 19:34:21"
