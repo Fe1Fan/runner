@@ -31,7 +31,7 @@ input s scan config or index number exec.
       "incl": "",
       "status": "stop",
       "pid": "45619",
-      "result": "helloworld",
+      "rult": "helloworld",
       "lrt": "2019-08-26 19:34:21"
     }
   ]
